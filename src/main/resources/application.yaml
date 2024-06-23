@@ -1,0 +1,53 @@
+server:
+  port: 9000
+  ip: 192.168.29.226
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+            - name: AuthFilter
+              args:
+                name: USER-SERVICE
+                fallbackuri: forward:/user-service-fallback
+        - id: TRACKER-SERVICE
+          uri: lb://TRACKER-SERVICE
+          predicates:
+            - Path=/tracker/**
+          filters:
+            - name: AuthFilter
+              args:
+                name: TRACKER-SERVICE
+                fallbackuri: forward:/tracker-service-fallback
+        - id: AUTH-SERVICE
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: AUTH-SERVICE
+                fallbackuri: forward:/auth-fallback
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://${server.ip}:8761/eureka/
+  instance:
+    hostname: ${server.ip}
+
