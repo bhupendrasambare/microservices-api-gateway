@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "bhupendra1404/microservice:ms-agpi-gateway"
+        CONTAINER_NAME = "ms-api-gateway"
+        DOCKER_PATH = '/usr/local/bin/docker'
+        MAVEN_PATH = '/opt/homebrew/Cellar/maven/3.9.5/libexec/bin/mvn'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'git@github.com:bhupendrasambare/microservices-api-gateway.git'
+            }
+        }
+
+        stage('Build JAR') {
+            steps {
+                sh "${MAVEN_PATH} clean package -DskipTests -Dserver.ip=192.168.29.226"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "ls"
+                    // Build the Docker image, disable image pulling
+                    sh "${DOCKER_PATH} build --pull=false --progress=plain -t ${DOCKER_IMAGE} ."
+                }
+            }
+        }
+
+        stage('Deploy Docker Image') {
+            steps {
+                script {
+                    // Stop and remove the existing container if it exists
+                    sh """
+                    if [ \$(${DOCKER_PATH} ps -a -q -f name=${CONTAINER_NAME}) ]; then
+                        ${DOCKER_PATH} stop ${CONTAINER_NAME}
+                        ${DOCKER_PATH} rm ${CONTAINER_NAME}
+                    fi
+                    """
+
+                    // Run the new container, using the host's IP dynamically
+                    sh """
+                    ${DOCKER_PATH} run -i -p 9000:9000 -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE}
+                    """
+                }
+            }
+        }
+    }
+}
