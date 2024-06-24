@@ -40,7 +40,6 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                         try {
                             jwtUtils.validateToken(token);
                         } catch (Exception e) {
-                            e.printStackTrace();
                             return handleUnauthorized(exchange);
                         }
                     } else {
