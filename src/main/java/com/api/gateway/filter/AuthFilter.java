@@ -17,37 +17,36 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
     @Value("${server.port}")
     private String port;
 
-
     @Autowired
     private RouteValidator routeValidator;
 
     @Autowired
-    private JwtUtils  jwtUtils;
+    private JwtUtils jwtUtils;
 
-    public AuthFilter(){
+    public AuthFilter() {
         super(Config.class);
     }
 
     @Override
     public GatewayFilter apply(Config config) {
-        return (((exchange, chain) ->{
-            if(routeValidator.isSecure.test(exchange.getRequest())){
+        return (((exchange, chain) -> {
+            if (routeValidator.isSecure.test(exchange.getRequest())) {
                 // validate header
-                if(exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                     String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                     if(token!=null && token.startsWith("Bearer ")){
-                         token = token.substring(7);
-                         // validate token in auth service
-                         try{
-                             jwtUtils.validateToken(token);
-                         }catch (Exception e){
-                             e.printStackTrace();
-                             return handleUnauthorized(exchange);
-                         }
-                     }else{
-                         return handleUnauthorized(exchange);
-                     }
-                }else{
+                if (exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+                    String token = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+                    if (token != null && token.startsWith("Bearer ")) {
+                        token = token.substring(7);
+                        // validate token in auth service
+                        try {
+                            jwtUtils.validateToken(token);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return handleUnauthorized(exchange);
+                        }
+                    } else {
+                        return handleUnauthorized(exchange);
+                    }
+                } else {
                     return handleUnauthorized(exchange);
                 }
             }
@@ -61,8 +60,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
         return response.setComplete();
     }
 
-    public static class Config{
+    public static class Config {
 
     }
-
 }
