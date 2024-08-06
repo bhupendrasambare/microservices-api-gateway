@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "bhupendra1404/microservice:ms-agpi-gateway"
+        DOCKER_IMAGE = "bhupendra1404/microservice:ms-api-gateway"
         CONTAINER_NAME = "ms-api-gateway"
         DOCKER_PATH = '/usr/local/bin/docker'
         MAVEN_PATH = '/opt/homebrew/Cellar/maven/3.9.5/libexec/bin/mvn'
+        CUSTOM_SERVER_IP = '192.168.29.226'
     }
 
     stages {
@@ -18,15 +19,13 @@ pipeline {
 
         stage('Build JAR') {
             steps {
-                sh "${MAVEN_PATH} clean package -DskipTests -Dserver.ip=192.168.29.226"
+                sh "${MAVEN_PATH} clean package -DskipTests"
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "ls"
-                    // Build the Docker image, disable image pulling
                     sh "${DOCKER_PATH} build --pull=false --progress=plain -t ${DOCKER_IMAGE} ."
                 }
             }
@@ -35,7 +34,6 @@ pipeline {
         stage('Deploy Docker Image') {
             steps {
                 script {
-                    // Stop and remove the existing container if it exists
                     sh """
                     if [ \$(${DOCKER_PATH} ps -a -q -f name=${CONTAINER_NAME}) ]; then
                         ${DOCKER_PATH} stop ${CONTAINER_NAME}
@@ -43,9 +41,8 @@ pipeline {
                     fi
                     """
 
-                    // Run the new container, using the host's IP dynamically
                     sh """
-                    ${DOCKER_PATH} run -i -p 9000:9000 -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE}
+                    ${DOCKER_PATH} run -i -p 9000:9000 -d --name ${CONTAINER_NAME} -e CUSTOM_SERVER_IP=${CUSTOM_SERVER_IP}  ${DOCKER_IMAGE}
                     """
                 }
             }

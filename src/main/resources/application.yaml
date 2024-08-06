@@ -1,14 +1,16 @@
 server:
   port: 9000
-  ip: localhost
 
-
+custom:
+  server-ip: localhost
 
 spring:
+  config:
+    import: "configserver:http://${custom.server-ip}:9005"
   application:
     name: API-GATEWAY
   datasource:
-    url: jdbc:mysql://${server.ip}:3306/microservices?allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${custom.server-ip}:3306/microservices?allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: password
@@ -67,7 +69,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://${server.ip}:8761/eureka/
+      defaultZone: http://${custom.server-ip}:8761/eureka/
   instance:
-    hostname: ${server.ip}
+    hostname: ${custom.server-ip}
 
