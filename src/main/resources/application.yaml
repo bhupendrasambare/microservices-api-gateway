@@ -60,9 +60,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: hystrix.stream
+        include: "*"
+  endpoint:
     health:
       show-details: always
+    info:
+      enabled: true
+    metrics:
+      enabled: true
+    env:
+      enabled: true
 
 eureka:
   client:
