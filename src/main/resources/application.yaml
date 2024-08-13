@@ -61,7 +61,14 @@ management:
     web:
       exposure:
         include: "*"
+  health:
+      readiness-state:
+          enabled: true
+      liveness-state:
+          enabled: true
   endpoint:
+    pause:
+        enabled: true
     health:
       show-details: always
     info:
