@@ -9,6 +9,13 @@ spring:
     import: "configserver:http://${custom.server-ip}:9005"
   application:
     name: API-GATEWAY
+  boot:
+    admin:
+      client:
+        url: http://${custom.server-ip}:8762
+        instance:
+          service-base-url: http://127.0.0.1:${server.port}
+          name: ${spring.application.name}
   datasource:
     url: jdbc:mysql://${custom.server-ip}:3306/microservices?allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
