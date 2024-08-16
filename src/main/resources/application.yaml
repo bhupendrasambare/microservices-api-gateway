@@ -14,7 +14,7 @@ spring:
       client:
         url: http://${custom.server-ip}:8762
         instance:
-          service-base-url: http://127.0.0.1:${server.port}
+          service-base-url: http://${custom.server-ip}:${server.port}
           name: ${spring.application.name}
   datasource:
     url: jdbc:mysql://${custom.server-ip}:3306/microservices?allowPublicKeyRetrieval=true
