@@ -6,7 +6,7 @@ custom:
 
 spring:
   config:
-    import: "configserver:http://${custom.server-ip}:9005"
+    import: "optional:configserver:http://${custom.server-ip}:9005"
   application:
     name: API-GATEWAY
   boot:
