@@ -77,6 +77,30 @@ This project provides an API Gateway with **Dynamic Services Management** and **
 
 The project includes a `Jenkinsfile` for CI/CD integration. Ensure Jenkins is set up with Docker and Maven installed.
 
+### Database structure
+
+```sql
+CREATE TABLE `services` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `enabled` bit(1) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `service_id` varchar(255) DEFAULT NULL,
+  `uri` varchar(255) DEFAULT NULL,
+  `method` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `paths` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `service` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+```
+
 ## Contributing
 
 1. Fork the repository.
