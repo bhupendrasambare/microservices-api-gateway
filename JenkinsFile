@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        JAVA_HOME = "/Users/bhupendrasam1404/Library/Java/JavaVirtualMachines/jdk-22.0.1.jdk/Contents/Home"
         DOCKER_IMAGE = "bhupendra1404/microservice:ms-api-gateway"
         CONTAINER_NAME = "ms-api-gateway"
         DOCKER_PATH = '/usr/local/bin/docker'
@@ -13,7 +14,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'git@github.com:bhupendrasambare/microservices-api-gateway.git'
+                git branch: 'main', url: 'https://github.com/bhupendrasambare/microservices-api-gateway.git'
             }
         }
 
@@ -26,7 +27,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "${DOCKER_PATH} build --pull=false --progress=plain -t ${DOCKER_IMAGE} ."
+                    sh "${DOCKER_PATH} build --no-cache -t ${DOCKER_IMAGE} ."
                 }
             }
         }
@@ -42,8 +43,17 @@ pipeline {
                     """
 
                     sh """
-                    ${DOCKER_PATH} run -i -p 9000:9000 -d --name ${CONTAINER_NAME} -e CUSTOM_SERVER_IP=${CUSTOM_SERVER_IP}  ${DOCKER_IMAGE}
+                    ${DOCKER_PATH} run -i -p 9000:9000 -d --name ${CONTAINER_NAME} -e CUSTOM_SERVER_IP=${CUSTOM_SERVER_IP} ${DOCKER_IMAGE}
                     """
+                }
+            }
+        }
+
+        stage('Clean Up Docker Images') {
+            steps {
+                script {
+                    // Remove all dangling images
+                    sh "${DOCKER_PATH} image prune -f"
                 }
             }
         }
