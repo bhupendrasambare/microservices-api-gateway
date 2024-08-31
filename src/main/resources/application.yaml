@@ -7,12 +7,6 @@ custom:
 spring:
   config:
     import: "optional:configserver:http://${custom.server-ip}:9005"
-  codec:
-    max-in-memory-size: 50MB
-  servlet:
-    multipart:
-      max-file-size: 50MB  # Maximum file size
-      max-request-size: 50MB
   application:
     name: API-GATEWAY
   boot:
@@ -68,9 +62,6 @@ spring:
           enabled: true
       httpclient:
         response-timeout: 300000
-        max-initial-line-length: 8192
-        max-header-size: 8192
-        max-chunk-size: 512KB
 
 management:
   endpoints:
