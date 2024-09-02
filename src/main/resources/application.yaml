@@ -28,6 +28,11 @@ spring:
     hibernate:
       ddl-auto: update
   cloud:
+    loadbalancer:
+      healthCheck:
+        interval: 5000
+      service-discovery:
+          timeout: 20000
     gateway:
 #      routes:
 #        - id: USER-SERVICE
@@ -61,7 +66,8 @@ spring:
         locator:
           enabled: true
       httpclient:
-        response-timeout: 300000
+        connect-timeout: 20000
+        response-timeout: 20000ms
 
 management:
   endpoints:
@@ -94,3 +100,14 @@ eureka:
   instance:
     hostname: ${custom.server-ip}
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      myServiceCircuitBreaker:
+        slidingWindowSize: 20
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 5
+        minimumNumberOfCalls: 10
+        slowCallDurationThreshold: 20s # Set to 20 seconds to match desired response wait time
+        slowCallRateThreshold: 50
