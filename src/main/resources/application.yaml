@@ -34,6 +34,17 @@ spring:
       service-discovery:
           timeout: 20000
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTIONS
 #      routes:
 #        - id: USER-SERVICE
 #          uri: lb://USER-SERVICE
