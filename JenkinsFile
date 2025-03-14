@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        JAVA_HOME = "/Users/bhupendrasam1404/Library/Java/JavaVirtualMachines/jdk-22.0.1.jdk/Contents/Home"
+        JAVA_HOME = "/Users/bhupendrasam1404/Library/Java/JavaVirtualMachines/jdk-21.0.6.jdk/Contents/Home"
         DOCKER_IMAGE = "bhupendra1404/microservice:ms-api-gateway"
         CONTAINER_NAME = "ms-api-gateway"
         DOCKER_PATH = '/usr/local/bin/docker'
-        MAVEN_PATH = '/opt/homebrew/Cellar/maven/3.9.5/libexec/bin/mvn'
+        MAVEN_PATH = '/opt/homebrew/Cellar/maven/3.9.9/libexec/bin/mvn'
         CUSTOM_SERVER_IP = '192.168.29.226'
     }
 

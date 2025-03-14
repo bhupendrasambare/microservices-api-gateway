@@ -14,7 +14,7 @@ This project provides an API Gateway with **Dynamic Services Management** and **
 
 ## Technologies Used
 
-- Java 17
+- Java 21
 - Spring Boot
 - Spring Cloud
 - MySQL
@@ -25,7 +25,7 @@ This project provides an API Gateway with **Dynamic Services Management** and **
 
 ### Prerequisites
 
-- **Java 17**
+- **Java 21**
 - **MySQL**
 - **PORT: 9000**
 - **Docker**
